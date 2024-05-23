@@ -49,7 +49,7 @@
                 }
             }
         var validActionValues = [];
-        var validTypeValues = ['object','record', 'app', 'url', 'tab', 'knowledge', 'experiencepage','namedpage', 'relatedlist'];
+        var validTypeValues = ['object','record', 'app', 'url', 'tab', 'knowledge', 'experiencepage','namedpage', 'relatedlist','cpqurl'];
         if (validTypeValues.includes(destinationType)) {
             switch (destinationType) {
                 case 'object' :
@@ -163,6 +163,16 @@
                         throw new Error('Missing required data. Since you have DestinationType set to relationshiplist, you need to pass in 1) a RecordId 2) a DestinationName like Case, 3) a RelationshipName like CaseComments and 4) a DestinationAction (which here has to be view) ');
                     }
                 break;
+                //let's say your using this component in a flow and the flow is embeded in the Saleforce CPQ edit line items screen we need to do this else we endup in loop.or any vf.
+                case 'cpqurl' :
+					if(destinationUrl) {
+						var currentUrl = window.location.href.split(".com/")[0] + ".com/";
+						window.location.href = currentUrl+destinationUrl;
+						
+					} else {
+						throw new Error('Missing DestinationUrl. Since you have DestinationType set to url, you need to pass in a valid CPQ URL');
+					}
+				break;
                 
             default:
                 throw new Error("The code should definitely not have reached this point. Bad human.");
